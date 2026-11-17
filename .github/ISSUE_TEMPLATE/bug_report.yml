@@ -1,0 +1,50 @@
+name: Bug report
+description: Something in RUGR, RUGR Setup or the website doesn't work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. **Never post a private key, password or seed phrase**, and check logs and screenshots for them first.
+        Security problems go through [private reporting](https://github.com/GTADOTMOD/GTAMODS/security/advisories/new) instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the phone and choose RUGR
+        2. ...
+  - type: input
+    id: version
+    attributes:
+      label: RUGR version
+      placeholder: "0.1.0"
+  - type: dropdown
+    id: edition
+    attributes:
+      label: Game edition
+      options:
+        - GTA V Legacy
+        - GTA V Enhanced
+        - Not about the game
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Wallet mode
+      options:
+        - Practice
+        - Real money
+        - No wallet yet
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: The end of `%LOCALAPPDATA%\PumpV\companion.log`, and `ScriptHookVDotNet.log` from the game folder. Remove anything private first.
+      render: text

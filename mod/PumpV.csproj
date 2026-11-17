@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>PumpV</AssemblyName>
+    <RootNamespace>PumpV</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <Nullable>disable</Nullable>
+    <Version>0.1.0</Version>
+    <Deterministic>true</Deterministic>
+    <!-- iFruit Jailbreak.dll is needed to compile. Put it in mod\lib\ or pass
+         -p:IFruitJailbreakPath="C:\Games\GTAV\scripts\iFruit Jailbreak.dll". -->
+    <IFruitJailbreakPath Condition="'$(IFruitJailbreakPath)' == ''">$(MSBuildThisFileDirectory)lib/iFruit Jailbreak.dll</IFruitJailbreakPath>
+    <!-- Optional: -p:GTAPath="C:\Games\GTAV" copies the build into scripts\. -->
+    <GTAPath Condition="'$(GTAPath)' == ''"></GTAPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Compile-time only: the game folder already has ScriptHookVDotNet3.dll. -->
+    <PackageReference Include="ScriptHookVDotNet3" Version="3.6.0" ExcludeAssets="runtime" />
+    <!-- Lets this build without Visual Studio's targeting pack (e.g. dotnet build). -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="iFruit Jailbreak">
+      <HintPath>$(IFruitJailbreakPath)</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The tests build on their own, without the game (see the README). -->
+    <Compile Remove="tests/**" />
+    <Compile Remove="phone/**" />
+    <None Include="PumpV.ini" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="CopyToGta" AfterTargets="Build" Condition="'$(GTAPath)' != ''">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GTAPath)/scripts" />
+    <!-- Never overwrite a PumpV.ini the player already edited. -->
+    <Copy SourceFiles="PumpV.ini" DestinationFolder="$(GTAPath)/scripts" Condition="!Exists('$(GTAPath)/scripts/PumpV.ini')" />
+  </Target>
+
+</Project>

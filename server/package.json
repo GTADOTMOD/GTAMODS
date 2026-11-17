@@ -1,0 +1,26 @@
+{
+  "name": "rugr-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "RUGR's server: Solana RPC for the app, coin pictures for launches, and the list of coins launched through RUGR.",
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/index.js",
+    "test": "tsc -p tsconfig.json && node --test \"dist/test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@pump-fun/pump-sdk": "4.3.1",
+    "@solana/web3.js": "1.98.4",
+    "bn.js": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/bn.js": "5.2.0",
+    "@types/node": "22.19.1",
+    "typescript": "5.9.3"
+  }
+}

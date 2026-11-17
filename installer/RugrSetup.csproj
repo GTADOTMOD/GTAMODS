@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- RUGR Setup: one exe that finds GTA V, checks what RUGR needs and installs RUGR's own files.
+       build-release.ps1 builds RUGR, zips its files and passes the zip in as PayloadZip. -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>RUGR-Setup</AssemblyName>
+    <RootNamespace>RugrSetup</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <Version>0.1.0</Version>
+    <AssemblyTitle>RUGR Setup</AssemblyTitle>
+    <Product>RUGR</Product>
+    <Company>GTAMOD</Company>
+    <Copyright>GTAMOD</Copyright>
+    <ApplicationIcon>assets\rugr.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Deterministic>true</Deterministic>
+    <DebugType>none</DebugType>
+    <!-- The zip of RUGR's files with its release.json. Without it the setup can only draw its screens (- -capture). -->
+    <PayloadZip Condition="'$(PayloadZip)' == ''"></PayloadZip>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Lets this build without Visual Studio's targeting pack (e.g. dotnet build). -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <EmbeddedResource Include="../companion/tools/art/logo.png" LogicalName="logo.png" />
+    <EmbeddedResource Include="$(PayloadZip)" LogicalName="payload.zip" Condition="'$(PayloadZip)' != ''" />
+  </ItemGroup>
+
+</Project>

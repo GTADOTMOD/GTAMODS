@@ -1,0 +1,16 @@
+name: Feature request
+description: An idea for RUGR or GTAMOD.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: Describe the feature and what it would let you do.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter?
+      description: The problem it solves, or the moment in the game where you'd use it.

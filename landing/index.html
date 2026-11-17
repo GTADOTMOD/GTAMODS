@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GTAMOD</title>
+<meta name="description" content="GTAMOD builds mods for Grand Theft Auto that put real crypto tools on your character's phone. Our first product, RUGR, is a launchpad and wallet inside GTA V. Unofficial, and not affiliated with Rockstar Games.">
+<meta name="theme-color" content="#07050a">
+<meta property="og:title" content="GTAMOD">
+<meta property="og:description" content="Crypto tools inside Grand Theft Auto. Our first product, RUGR, is a launchpad and wallet on your in-game phone.">
+<meta property="og:image" content="assets/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/brand/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/mobile/touch-icon.png">
+<link rel="preload" href="assets/fonts/barlow-condensed-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/mobile/hero-street.webp" as="image" media="(max-width: 899px), (max-height: 500px)" fetchpriority="high">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/mobile.css" media="(max-width: 899px), (max-height: 500px)">
+<link rel="modulepreload" href="js/mobile.js" media="(max-width: 899px), (max-height: 500px)">
+<link rel="modulepreload" href="js/wordmark.js" media="(max-width: 899px), (max-height: 500px)">
+<script>
+(function (d) {
+  d.classList.add("js");
+  // A phone's first visit opens on the name. This is decided before the first paint, so the page never flashes up first.
+  try {
+    if (location.hash) d.classList.add("laid-out", "arriving"); // a link to a section has to land on it exactly
+    else if (matchMedia("(max-width: 899px), (max-height: 500px)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches && !sessionStorage.getItem("seen")) d.classList.add("opening");
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<svg width="0" height="0" class="defs" aria-hidden="true">
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61a3.18 3.18 0 0 0-1.33-1.76c-1.09-.74.08-.73.08-.73a2.52 2.52 0 0 1 1.84 1.24 2.56 2.56 0 0 0 3.5 1 2.56 2.56 0 0 1 .76-1.6c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 0 1 1.24-3.22 4.3 4.3 0 0 1 .1-3.18s1.01-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23a4.3 4.3 0 0 1 .12 3.18 4.64 4.64 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92a2.87 2.87 0 0 1 .82 2.22l-.02 3.29c0 .32.21.69.83.57A12 12 0 0 0 12 .3"/></symbol>
+</svg>
+<canvas id="stage" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <a class="nav-logo" href="#top" aria-label="GTAMOD, back to the top"><img src="assets/brand/gtamod-logo-160.webp" alt="GTAMOD" width="79" height="64"></a>
+  <nav class="nav-links" aria-label="Sections">
+    <a href="#rugr">RUGR</a>
+    <a href="#how">How it works</a>
+    <a href="#road">Roadmap</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+  <div class="nav-end">
+    <div class="hud" aria-hidden="true"><i class="hud-dot"></i><span id="hudTime">19:52</span></div>
+    <div class="socials">
+      <a class="social" data-link="x" href="#access" aria-label="GTAMOD on X"><svg class="glyph" aria-hidden="true"><use href="#i-x"/></svg></a>
+      <a class="social" data-link="github" href="#access" aria-label="GTAMOD on GitHub"><svg class="glyph" aria-hidden="true"><use href="#i-github"/></svg></a>
+    </div>
+    <a class="btn btn-small" href="download.html">Get early access</a>
+  </div>
+  <span class="pill pill-live nav-status">Early access</span>
+  <div class="socials nav-socials">
+    <a class="social" data-link="x" href="#access" aria-label="GTAMOD on X"><svg class="glyph" aria-hidden="true"><use href="#i-x"/></svg></a>
+    <a class="social" data-link="github" href="#access" aria-label="GTAMOD on GitHub"><svg class="glyph" aria-hidden="true"><use href="#i-github"/></svg></a>
+  </div>
+</header>
+
+<nav class="dock" id="dock" aria-label="Sections">
+  <i class="dock-mark" aria-hidden="true"></i>
+  <a href="#top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>Home</span></a>
+  <a href="#rugr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 2.5h5.2A2.4 2.4 0 0 1 17 4.9v14.2a2.4 2.4 0 0 1-2.4 2.4H9.4A2.4 2.4 0 0 1 7 19.1V4.9a2.4 2.4 0 0 1 2.4-2.4zM11 18.5h2"/></svg><span>RUGR</span></a>
+  <a href="#how"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"/></svg><span>How</span></a>
+  <a href="#road"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21V9a4 4 0 0 1 4-4h8M15.5 1.5 19 5l-3.5 3.5"/></svg><span>Roadmap</span></a>
+  <a class="dock-cta" href="download.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 5 13.5h6L10 22l9-12h-6z"/></svg><span>Access</span></a>
+</nav>
+
+<main id="main">
+
+  <section class="intro" id="top" data-time="19:52">
+    <div class="intro-pin">
+      <div class="intro-art" aria-hidden="true">
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/hero-city.webp" width="720" height="1280"><img class="intro-city" src="assets/art/hero-city.webp" srcset="assets/art/hero-city-900.webp 900w, assets/art/hero-city.webp 2560w" sizes="100vw" alt="" width="2560" height="1440" fetchpriority="high"></picture>
+        <div class="intro-glow"></div>
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/hero-street.webp" width="780" height="1387"><img class="intro-street" src="assets/art/plate-hero.webp" srcset="assets/art/plate-hero-900.webp 900w, assets/art/plate-hero.webp 2200w" sizes="100vw" alt="" width="2200" height="1238"></picture>
+        <div class="intro-shade"></div>
+      </div>
+      <canvas id="introMask" aria-hidden="true"></canvas>
+      <div class="intro-first">
+        <p class="intro-line">Unofficial mods for GTA. Built for crypto.</p>
+        <p class="scroll-cue" aria-hidden="true">Scroll<i></i></p>
+      </div>
+      <div class="hero-copy wrap" id="heroCopy">
+        <p class="eyebrow"><time>19:52</time> Unofficial mods for <span class="brand" data-logo="gtaVLine">GTA V</span></p>
+        <h1>Your character just got a wallet.</h1>
+        <p class="lede">GTAMOD builds mods that put real crypto tools on your character's phone. Trade, swap and launch coins from inside the game, with your key on your own PC.</p>
+        <div class="actions">
+          <a class="btn" href="#rugr">Meet RUGR</a>
+          <a class="btn btn-ghost" href="download.html">Get early access</a>
+        </div>
+        <p class="fine hero-fine">Not made by or affiliated with <span class="brand brand-named" data-logo="rockstar" data-logo-name>Rockstar Games</span> or Take-Two Interactive.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec company" id="company" data-time="20:20">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-company.webp" width="640" height="1138"><img class="plate" src="assets/art/plate-company.webp" srcset="assets/art/plate-company-900.webp 900w, assets/art/plate-company.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy" data-parallax="0.05"></picture>
+    <div class="rain" aria-hidden="true"></div>
+    <div class="wrap company-grid">
+      <div class="company-copy">
+        <p class="eyebrow"><time>20:20</time> Who we are</p>
+        <h2 class="reveal">One kind<br>of mod.</h2>
+        <p class="lede reveal">GTAMOD is a studio that builds mods for Grand Theft Auto, and only one kind: crypto tools that run where you already play.</p>
+        <ol class="tenets reveal">
+          <li><b>Crypto tools only</b><span>Wallets, swaps and coin launches. Nothing else.</span></li>
+          <li><b>No second screen</b><span>Your character pulls out a phone, and the market is on it.</span></li>
+          <li><b>Story mode only</b><span>We stay out of GTA Online.</span></li>
+        </ol>
+      </div>
+      <div class="games reveal">
+        <article class="card game game-v">
+          <h3 class="game-mark"><span class="brand brand-big" data-logo="gtaV">GTA V</span></h3>
+          <span class="pill pill-live">Early access</span>
+          <p>RUGR runs in story mode on PC today. <a href="download.html">Download it</a>.</p>
+        </article>
+        <article class="card game game-vi">
+          <h3 class="game-mark"><span class="brand brand-big" data-logo="gtaVI">GTA VI</span></h3>
+          <span class="pill">Next</span>
+          <p>Our mods are built to work with it too, with just a few adjustments.</p>
+        </article>
+        <img class="float-coin gc-1" src="assets/mobile/coin-whale.webp" alt="" width="200" height="200" loading="lazy">
+        <img class="float-coin gc-2" src="assets/mobile/coin-gator.webp" alt="" width="200" height="200" loading="lazy">
+        <img class="float-coin gc-3" src="assets/mobile/coin-palm.webp" alt="" width="200" height="200" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section class="sec product" id="rugr" data-time="20:58">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-dash.webp" width="640" height="1138"><img class="plate" src="assets/art/plate-dash.webp" srcset="assets/art/plate-dash-900.webp 900w, assets/art/plate-dash.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy" data-parallax="0.05"></picture>
+    <div class="wrap product-grid">
+      <div class="product-title">
+        <p class="eyebrow"><time>20:58</time> First product</p>
+        <h2 class="reveal">A launchpad and wallet on your in-game phone.</h2>
+      </div>
+      <aside class="product-id reveal">
+        <div class="app-tile"><picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/brand-rugr.webp" width="280" height="280"><img src="assets/brand/rugr.webp" alt="RUGR logo" width="120" height="120" loading="lazy"></picture></div>
+        <img class="float-coin pc-1" src="assets/mobile/coin-dog.webp" alt="" width="200" height="200" loading="lazy">
+        <img class="float-coin pc-2" src="assets/mobile/coin-flamingo.webp" alt="" width="200" height="200" loading="lazy">
+        <p class="product-name">RUGR</p>
+        <p class="product-tag">Launchpad and wallet</p>
+        <span class="pill pill-live">Early access</span>
+      </aside>
+      <ul class="facts reveal">
+        <li><img class="icon" src="assets/icons/live.webp" alt="" width="72" height="72" loading="lazy"><div><b>Live pump.fun coins</b><span>Trending and New, updated as you watch</span></div></li>
+        <li><img class="icon" src="assets/icons/swap.webp" alt="" width="72" height="72" loading="lazy"><div><b>Any Solana token</b><span>Paste an address and swap through Jupiter</span></div></li>
+        <li><img class="icon" src="assets/icons/key.webp" alt="" width="72" height="72" loading="lazy"><div><b>Your key, your PC</b><span>Encrypted under your own password</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="story" id="story">
+    <div class="story-pin">
+      <div class="story-plates" aria-hidden="true">
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-asphalt.webp" width="640" height="1138"><img src="assets/art/plate-asphalt.webp" srcset="assets/art/plate-asphalt-900.webp 900w, assets/art/plate-asphalt.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-sidewalk.webp" width="640" height="1138"><img src="assets/art/plate-sidewalk.webp" srcset="assets/art/plate-sidewalk-900.webp 900w, assets/art/plate-sidewalk.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/dusk-blvd.webp" width="640" height="1138"><img src="assets/art/dusk-blvd.webp" srcset="assets/art/dusk-blvd-900.webp 900w, assets/art/dusk-blvd.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-forecourt.webp" width="640" height="1138"><img src="assets/art/plate-forecourt.webp" srcset="assets/art/plate-forecourt-900.webp 900w, assets/art/plate-forecourt.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-room.webp" width="640" height="1138"><img src="assets/art/plate-room.webp" srcset="assets/art/plate-room-900.webp 900w, assets/art/plate-room.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-corner.webp" width="640" height="1138"><img src="assets/art/plate-corner.webp" srcset="assets/art/plate-corner-900.webp 900w, assets/art/plate-corner.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+      </div>
+      <div class="story-shade" aria-hidden="true"></div>
+      <div class="story-shade-right" aria-hidden="true"></div>
+      <ol class="steps" id="steps">
+        <li class="step" data-screen="home">
+          <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/phone-home.webp" width="640" height="1197"><img class="step-shot" src="assets/screens/home-framed.webp" alt="RUGR's home screen" width="640" height="1197" loading="lazy"></picture>
+          <div class="step-copy">
+            <p class="step-kicker">Home</p>
+            <h3>An app, on the phone you already have.</h3>
+            <p>Pull out the phone in the game and RUGR is right there, with your balance and the market one press away.</p>
+          </div>
+        </li>
+        <li class="step" data-screen="trending" data-side="right">
+          <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/phone-trending.webp" width="640" height="1197"><img class="step-shot" src="assets/screens/trending-framed.webp" alt="RUGR's Trending list" width="640" height="1197" loading="lazy"></picture>
+          <div class="step-copy">
+            <p class="step-kicker">Trending and New</p>
+            <h3>Every coin, live.</h3>
+            <p>Real pump.fun coins with their pictures, market cap, five-minute change, volume and traders. New coins show up seconds after they launch.</p>
+          </div>
+        </li>
+        <li class="step" data-screen="coin">
+          <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/phone-coin.webp" width="640" height="1197"><img class="step-shot" src="assets/screens/coin-framed.webp" alt="A coin's page in RUGR" width="640" height="1197" loading="lazy"></picture>
+          <div class="step-copy">
+            <p class="step-kicker">Trade</p>
+            <h3>Buy and sell from the street.</h3>
+            <p>Every coin has a page with its curve, price, holders and your position. Each confirm screen shows the most you can spend and the least you'll get.</p>
+          </div>
+        </li>
+        <li class="step" data-screen="swap">
+          <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/phone-swap.webp" width="640" height="1197"><img class="step-shot" src="assets/screens/swap-framed.webp" alt="RUGR's Swap screen" width="640" height="1197" loading="lazy"></picture>
+          <div class="step-copy">
+            <p class="step-kicker">Swap</p>
+            <h3>Anything on Solana, by its address.</h3>
+            <p>Copy a token's address on your PC and paste it in. Jupiter finds the route, and you get a fresh quote when you confirm.</p>
+          </div>
+        </li>
+        <li class="step" data-screen="wallet" data-side="right">
+          <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/phone-wallet.webp" width="640" height="1197"><img class="step-shot" src="assets/screens/wallet-framed.webp" alt="RUGR's Wallet screen" width="640" height="1197" loading="lazy"></picture>
+          <div class="step-copy">
+            <p class="step-kicker">Wallet</p>
+            <h3>A wallet that's yours.</h3>
+            <p>Your total, every token and its 24-hour change. Send, receive by QR code, and export your private key to any Solana wallet whenever you like.</p>
+          </div>
+        </li>
+        <li class="step" data-screen="create">
+          <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/phone-create.webp" width="640" height="1197"><img class="step-shot" src="assets/screens/create-framed.webp" alt="Creating a coin in RUGR" width="640" height="1197" loading="lazy"></picture>
+          <div class="step-copy">
+            <p class="step-kicker">Create</p>
+            <h3>Launch a coin from a photo.</h3>
+            <p>Create Coin opens the game's own camera. Take the shot, give it a name and a ticker, and the card shows your coin as it will look.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="story-foot">
+        <ol class="story-dots" id="storyDots" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+        <p class="tag">Private build / Sample data</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec world" aria-labelledby="worldTitle" data-time="21:30">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-wall.webp" width="640" height="1138"><img class="plate" src="assets/art/plate-wall.webp" srcset="assets/art/plate-wall-900.webp 900w, assets/art/plate-wall.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+    <div class="wrap">
+      <h2 class="reveal" id="worldTitle">The city never closes. <em>Neither does the market.</em></h2>
+    </div>
+    <div class="strip" id="strip">
+      <figure class="frame f-wide"><picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/panel-car.webp" width="800" height="1000"><img src="assets/art/panel-car.webp" alt="" width="1200" height="800" loading="lazy"></picture><figcaption>Frame 01 / The causeway</figcaption></figure>
+      <figure class="frame"><picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/panel-alley.webp" width="800" height="1000"><img src="assets/art/panel-alley.webp" alt="" width="1024" height="1536" loading="lazy"></picture><figcaption>Frame 02 / The alley</figcaption></figure>
+      <figure class="frame f-wide"><picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/panel-phone.webp" width="800" height="1000"><img src="assets/art/panel-phone.webp" alt="" width="1200" height="800" loading="lazy"></picture><figcaption>Frame 03 / The parked car</figcaption></figure>
+      <figure class="frame f-mid"><picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/panel-motel.webp" width="800" height="1000"><img src="assets/art/panel-motel.webp" alt="" width="1200" height="800" loading="lazy"></picture><figcaption>Frame 04 / The motel</figcaption></figure>
+      <figure class="frame f-wide"><picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/panel-marsh.webp" width="800" height="1000"><img src="assets/art/panel-marsh.webp" alt="" width="1200" height="800" loading="lazy"></picture><figcaption>Frame 05 / The marsh road</figcaption></figure>
+    </div>
+    <p class="wrap fine world-note">Original AI-generated artwork made for GTAMOD. None of it is from GTA or any other game.</p>
+  </section>
+
+  <section class="sec ingame" data-time="21:47">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-den.webp" width="640" height="1138"><img class="plate" src="assets/art/plate-den.webp" srcset="assets/art/plate-den-900.webp 900w, assets/art/plate-den.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+    <div class="wrap ingame-copy">
+      <div>
+        <p class="eyebrow"><time>21:47</time> In the game</p>
+        <h2 class="reveal">It runs in the game.</h2>
+      </div>
+      <p class="lede reveal">This is <span class="brand" data-logo="gtaVLine">GTA V</span> in story mode with RUGR open. The game keeps running behind the phone, so the market lives in the same world you do.</p>
+    </div>
+    <figure class="wrap capture">
+      <div class="capture-frame">
+        <div class="capture-bar"><span>Private build</span><span>Story mode</span><span>RUGR open</span><span>Sample data</span></div>
+        <div class="capture-pan"><picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/ingame.webp" width="2101" height="880"><img src="assets/art/ingame-golden.webp" srcset="assets/art/ingame-golden-900.webp 1000w, assets/art/ingame-golden.webp 2400w" sizes="100vw" alt="GTA V at sunset with the RUGR phone open beside the player's character" width="2400" height="1005" loading="lazy"></picture></div>
+      </div>
+      <figcaption class="fine">Captured in <span class="brand" data-logo="gtaVLine">GTA V</span> on PC, with the phone screen updated to the current build.</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec photo" data-time="22:30">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-alley.webp" width="640" height="1138"><img class="plate" src="assets/art/plate-alley.webp" srcset="assets/art/plate-alley-900.webp 900w, assets/art/plate-alley.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy" data-parallax="0.05"></picture>
+    <div class="wrap photo-grid">
+      <div class="photo-copy">
+        <p class="eyebrow"><time>22:30</time> Create</p>
+        <h2 class="reveal">Shoot it.<br>Name it.<br><em>Launch it.</em></h2>
+        <p class="lede reveal">Create Coin opens the phone's real camera, cropped to a square. Frame anything in the game, take the shot, and that photo is your coin.</p>
+      </div>
+      <figure class="print reveal">
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/coin-photo.webp" width="400" height="400"><img src="assets/art/coin-photo.webp" alt="A photo taken with the in-game camera: two characters on a street corner" width="512" height="512" loading="lazy"></picture>
+        <figcaption>Phone camera / real capture</figcaption>
+      </figure>
+      <figure class="photo-phone reveal">
+        <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/phone-create.webp" width="640" height="1197"><img src="assets/screens/create-framed.webp" alt="The same photo as a coin card in RUGR" width="640" height="1197" loading="lazy"></picture>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec how" id="how" data-time="23:07">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-garage.webp" width="640" height="1138"><img class="plate" src="assets/art/plate-garage.webp" srcset="assets/art/plate-garage-900.webp 900w, assets/art/plate-garage.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy" data-parallax="0.05"></picture>
+    <div class="wrap">
+      <p class="eyebrow"><time>23:07</time> Under the hood</p>
+      <h2 class="reveal">Your key stays on your PC.</h2>
+      <ol class="flow reveal">
+        <li class="card">
+          <img class="icon" src="assets/icons/mod.webp" alt="" width="96" height="96" loading="lazy">
+          <p class="tag">In the game</p>
+          <h3>The mod</h3>
+          <p>Shows the screens and takes your key presses. It never holds your key.</p>
+        </li>
+        <li class="card">
+          <img class="icon" src="assets/icons/companion.webp" alt="" width="96" height="96" loading="lazy">
+          <p class="tag">On your PC</p>
+          <h3>The companion</h3>
+          <p>Starts with the game, keeps your wallet encrypted and signs your trades.</p>
+        </li>
+        <li class="card">
+          <img class="icon" src="assets/icons/market.webp" alt="" width="96" height="96" loading="lazy">
+          <p class="tag">On Solana</p>
+          <h3>The market</h3>
+          <p>pump.fun for coins, Jupiter for swaps. Every trade is simulated before it can be sent.</p>
+        </li>
+      </ol>
+      <ul class="trust">
+        <li class="reveal"><img class="icon" src="assets/icons/lock.webp" alt="" width="64" height="64" loading="lazy"><div><h3>Encrypted with your password</h3><p>Scrypt and AES-256-GCM. Your wallet starts locked each time, with no key in memory until you unlock it.</p></div></li>
+        <li class="reveal"><img class="icon" src="assets/icons/practice.webp" alt="" width="64" height="64" loading="lazy"><div><h3>Practice comes first</h3><p>A new wallet starts in Practice, where nothing is sent. Real money is a switch you turn on yourself, with your password.</p></div></li>
+        <li class="reveal"><img class="icon" src="assets/icons/cancel.webp" alt="" width="64" height="64" loading="lazy"><div><h3>Confirm screens start on Cancel</h3><p>Each one lasts 30 seconds and works once, so a double press can't send a second trade.</p></div></li>
+        <li class="reveal"><img class="icon" src="assets/icons/limit.webp" alt="" width="64" height="64" loading="lazy"><div><h3>Limits you set</h3><p>A cap on every trade and on slippage. Lowering one is instant. Raising one asks for your password.</p></div></li>
+        <li class="reveal"><img class="icon" src="assets/icons/exit.webp" alt="" width="64" height="64" loading="lazy"><div><h3>You can always leave</h3><p>Export your private key to any Solana wallet, or reset RUGR and start again.</p></div></li>
+        <li class="reveal"><img class="icon" src="assets/icons/story.webp" alt="" width="64" height="64" loading="lazy"><div><h3>Story mode only</h3><p>Our mods stay out of GTA Online. Take the mod files out before you go online.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec road" id="road" data-time="00:12">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-windshield.webp" width="640" height="1138"><img class="plate" src="assets/art/plate-windshield.webp" srcset="assets/art/plate-windshield-900.webp 900w, assets/art/plate-windshield.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy" data-parallax="0.05"></picture>
+    <div class="wrap">
+      <p class="eyebrow"><time>00:12</time> What's next</p>
+      <h2 class="reveal">The road ahead.</h2>
+      <ol class="road-list reveal">
+        <li class="card reveal"><img class="icon" src="assets/icons/testing.webp" alt="" width="88" height="88" loading="lazy"><span class="road-when">Before</span><div><h3>RUGR on <span class="brand" data-logo="gtaVLine">GTA V</span></h3><p>Built and played in private, in story mode on PC, with trades simulated in Practice.</p></div></li>
+        <li class="card reveal"><img class="icon" src="assets/icons/installer.webp" alt="" width="88" height="88" loading="lazy"><span class="road-when">Now</span><div><h3>Early access</h3><p>One installer for GTA V on PC, free to <a href="download.html">download</a>. Practice first, and real money when you switch it on.</p></div></li>
+        <li class="card reveal"><span class="road-mark"><span class="brand brand-road" data-logo="gtaVI">GTA VI</span></span><span class="road-when">Then</span><div><h3>Built to carry over</h3><p>We've built our mods to work with GTA VI too, with just a few adjustments.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec faq" id="faq" data-time="01:40">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/plate-blinds.webp" width="640" height="1138"><img class="plate" src="assets/art/plate-blinds.webp" srcset="assets/art/plate-blinds-900.webp 900w, assets/art/plate-blinds.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+    <div class="wrap faq-grid">
+      <div class="faq-title">
+        <p class="eyebrow"><time>01:40</time> Questions</p>
+        <h2 class="reveal">Straight answers.</h2>
+      </div>
+      <div class="card faq-list">
+        <details open>
+          <summary><span>Is GTAMOD part of <span class="brand brand-named" data-logo="rockstar" data-logo-name>Rockstar Games</span>?</span></summary>
+          <p>No. GTAMOD is an independent studio. We aren't made by, affiliated with or endorsed by <span class="brand brand-named" data-logo="rockstar" data-logo-name>Rockstar Games</span> or Take-Two Interactive. You need your own copy of the game.</p>
+        </details>
+        <details>
+          <summary>Can I use RUGR in GTA Online?</summary>
+          <p>No. It's for story mode only. Script Hook V, which our mod needs, turns off the game's anti-cheat, so take the mod files out before you play online.</p>
+        </details>
+        <details>
+          <summary>Do you ever hold my money or my key?</summary>
+          <p>No. Your wallet is an ordinary Solana wallet, encrypted on your own PC under your password. We can't reach it, and we can't reset the password for you, so export your private key and keep it safe.</p>
+        </details>
+        <details>
+          <summary>Is it live?</summary>
+          <p>Yes, in early access. <a href="download.html">Download RUGR</a> free for GTA V on PC. A new wallet starts in Practice, where nothing is sent, and real money is a switch you turn on yourself.</p>
+        </details>
+        <details>
+          <summary>What do I need to run it?</summary>
+          <p>Just <span class="brand" data-logo="gtaVLine">GTA V</span> on PC. RUGR Setup installs the rest with one click: the three free mods RUGR runs on, Script Hook V, ScriptHookVDotNet and iFruit Jailbreak, and borderless mode. The <a href="download.html">download page</a> shows how.</p>
+        </details>
+        <details>
+          <summary>Is this a good way to make money?</summary>
+          <p>Treat it as a game with real stakes. Most memecoins lose their value, and trades can't be undone. Only put in what you can lose. Nothing here is financial advice.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec access" id="access" data-time="03:00">
+    <picture><source media="(max-width: 899px), (max-height: 500px)" srcset="assets/mobile/access.webp" width="720" height="1280"><img class="plate" src="assets/art/night-skyline.webp" srcset="assets/art/night-skyline-900.webp 900w, assets/art/night-skyline.webp 2200w" sizes="100vw" alt="" width="2200" height="1232" loading="lazy"></picture>
+    <div class="rain rain-full" aria-hidden="true"></div>
+    <div class="wrap access-copy">
+      <p class="eyebrow"><time>03:00</time> Still up?</p>
+      <h2 class="reveal">Get in <em>early.</em></h2>
+      <p class="lede reveal">RUGR is in early access for GTA V on PC, free to download. Follow along for what's next.</p>
+      <div class="actions" id="accessLinks">
+        <a class="btn" href="download.html">Download RUGR</a>
+        <a class="btn btn-ghost" data-link="x" data-name="X" href="#access"><svg class="glyph" aria-hidden="true"><use href="#i-x"/></svg>Follow on X</a>
+        <a class="btn btn-ghost" data-link="github" data-name="GitHub" href="#access"><svg class="glyph" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
+        <a class="btn btn-ghost" data-link="discord" data-name="Discord" href="#access">Join the Discord</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <img src="assets/brand/gtamod-logo-600.webp" alt="GTAMOD" width="148" height="120" loading="lazy">
+      <div class="socials">
+        <a class="social" data-link="x" href="#access" aria-label="GTAMOD on X"><svg class="glyph" aria-hidden="true"><use href="#i-x"/></svg></a>
+        <a class="social" data-link="github" href="#access" aria-label="GTAMOD on GitHub"><svg class="glyph" aria-hidden="true"><use href="#i-github"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-legal">
+      <p>GTAMOD is an independent project. It isn't made by, affiliated with, endorsed by or sponsored by Rockstar Games, Inc. or Take-Two Interactive Software, Inc. Grand Theft Auto, its logos and the Rockstar Games logo are their trademarks, shown here only to name the games and the company. Only the images marked as captured in GTA V show their game; the other artwork is original and AI-generated. RUGR isn't affiliated with pump.fun, Jupiter or Solana.</p>
+      <p>Our mods are for story mode on a copy of the game you own, and aren't for GTA Online. Crypto trading is risky and trades can't be undone. Nothing on this site is financial advice.</p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+/* The download page: the same city at night, with one job here, getting RUGR onto a PC. It sits on site.css
+   (type, buttons, nav, footer) and works on its own on phones, without mobile.css. */
+
+/* These sections hold instructions, not scenes, so they're as tall as what's in them. */
+.dl .sec { min-height: 0; }
+.dl .nav-end .btn .glyph { width: 0.85em; height: 0.85em; margin-right: 8px; }
+
+code, kbd {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 7%);
+  color: var(--cream);
+  font: 500 0.86em/1.4 var(--mono);
+  white-space: nowrap;
+}
+kbd { box-shadow: inset 0 -1px 0 rgb(255 255 255 / 20%), inset 0 0 0 1px rgb(255 255 255 / 10%); }
+.dl b { color: var(--cream); font-weight: 650; }
+.dl-num { color: var(--amber); font: 600 0.9rem/1.6 var(--mono); letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+
+/* ---- the top: the button, the facts, and the setup itself ---- */
+.dl-hero { display: flex; align-items: center; min-height: min(100svh, 1000px); padding-bottom: clamp(56px, 9vh, 110px); }
+.dl-hero::before {
+  background: linear-gradient(90deg, rgb(5 3 8 / 94%), rgb(5 3 8 / 74%) 46%, rgb(5 3 8 / 44%) 82%), linear-gradient(var(--ink), transparent 18%, transparent 78%, var(--ink));
+}
+.dl-hero-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 5vw, 96px); align-items: center; }
+.dl-hero-copy { display: grid; gap: 24px; justify-items: start; }
+.dl-hero-copy .eyebrow { margin: 0; }
+.dl-hero h1 { font-size: clamp(4.2rem, 7.6vw, 8.4rem); line-height: 0.86; letter-spacing: -0.02em; }
+.dl-get-btn { min-height: 62px; padding-inline: 32px; font-size: 1.3rem; }
+.dl-get-btn .glyph { width: 0.95em; height: 0.95em; }
+
+.dl-meta { display: flex; flex-wrap: wrap; gap: 12px 30px; margin: 2px 0 0; }
+.dl-meta div { display: grid; gap: 3px; }
+.dl-meta dt { color: var(--grey); font: 500 0.68rem/1.2 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
+.dl-meta dd { margin: 0; font-weight: 650; font-size: 1rem; font-variant-numeric: tabular-nums; }
+
+.dl-sha { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; color: var(--grey); font: 500 0.7rem/1.2 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; }
+.dl-sha code { padding: 0; background: none; color: var(--cream-2); font-size: 0.78rem; letter-spacing: 0; text-transform: none; }
+.copy {
+  padding: 6px 11px;
+  border: 0;
+  border-radius: 99px;
+  background: rgb(255 255 255 / 5%);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  color: var(--cream);
+  font: 600 0.66rem/1.2 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.copy:hover { background: rgb(255 241 220 / 12%); }
+.dl-phone { display: none; }
+
+/* RUGR Setup's real screens, as if its window floats in the room. */
+.dl-shot { position: relative; margin: 0; }
+.dl-shot::before {
+  content: "";
+  position: absolute;
+  inset: 6% 4%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(rgb(255 31 138 / 30%), rgb(255 177 61 / 8%) 50%, transparent 70%);
+  filter: blur(34px);
+}
+.dl-shot img { width: 100%; filter: drop-shadow(0 34px 60px rgb(0 0 0 / 62%)) drop-shadow(0 0 0.5px rgb(255 255 255 / 40%)); }
+.dl-hero-shot { perspective: 1800px; }
+.dl-hero-shot img { transform: rotateY(-10deg) rotateX(4deg) rotateZ(0.6deg); transform-origin: 20% 50%; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.dl-hero-shot:hover img { transform: rotateY(-3deg) rotateX(1deg); }
+.motion .dl-hero-shot { animation: shot-float 8s ease-in-out infinite; }
+@keyframes shot-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+
+/* ---- what you need ---- */
+.dl-needs { display: flex; align-items: center; }
+.dl-needs::before {
+  background: linear-gradient(90deg, rgb(5 3 8 / 92%), rgb(5 3 8 / 74%) 50%, rgb(5 3 8 / 56%)), linear-gradient(var(--ink), transparent 14%, transparent 86%, var(--ink));
+}
+.dl-two { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 96px); align-items: center; }
+.dl-intro { display: grid; gap: 22px; }
+.dl-intro .eyebrow { margin: 0; }
+.dl-list { padding: 4px clamp(18px, 2.4vw, 32px); }
+.dl-list li { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 16px; align-items: start; padding-block: 24px; border-bottom: 1px solid var(--line); }
+.dl-list li:last-child { border-bottom: 0; }
+.dl-list h3 { margin-bottom: 6px; font-size: 1.12rem; }
+.dl-list p { color: var(--cream-2); font-size: 0.95rem; line-height: 1.6; text-wrap: pretty; }
+.dl-out {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  align-self: center;
+  padding: 10px 14px;
+  border-radius: 99px;
+  box-shadow: inset 0 0 0 1px rgb(255 31 138 / 62%);
+  color: var(--cream);
+  font: 600 0.74rem/1 var(--mono);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.dl-out svg { width: 13px; height: 13px; color: var(--pink); }
+.dl-out:hover { background: rgb(255 31 138 / 16%); box-shadow: inset 0 0 0 1px var(--pink); }
+
+/* ---- install: one step per screen of the setup ---- */
+.dl-install {
+  background:
+    linear-gradient(var(--ink), transparent 260px),
+    radial-gradient(55% 36% at 85% 8%, rgb(255 31 138 / 11%), transparent 70%),
+    radial-gradient(45% 30% at 6% 52%, rgb(255 177 61 / 7%), transparent 70%),
+    radial-gradient(50% 30% at 90% 92%, rgb(34 215 212 / 5%), transparent 70%),
+    var(--ink);
+}
+.dl-install::before { display: none; }
+.dl-head { display: grid; gap: 20px; max-width: 48em; margin-bottom: clamp(44px, 8vh, 90px); }
+.dl-head .eyebrow { margin: 0; }
+.dl-steps { display: grid; gap: clamp(64px, 11vh, 130px); }
+.dl-step { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(28px, 5vw, 88px); align-items: center; scroll-margin-top: calc(var(--nav) + 24px); }
+.dl-step:nth-child(even) { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.dl-step:nth-child(even) .dl-shot { order: 2; }
+.dl-step-copy { display: grid; gap: 14px; max-width: 30em; }
+.dl-step-copy h3 { font: 900 clamp(2.2rem, 3.4vw, 3.4rem)/0.92 var(--display); letter-spacing: -0.01em; text-transform: uppercase; }
+.dl-step-copy p { color: var(--cream-2); font-size: 1.04rem; line-height: 1.62; text-wrap: pretty; }
+.dl-step .dl-num { font-size: 1rem; }
+
+/* ---- the first five minutes, on the phone ---- */
+.dl-first::before {
+  background: linear-gradient(rgb(5 3 8 / 84%), rgb(5 3 8 / 72%) 50%, rgb(5 3 8 / 86%)), linear-gradient(var(--ink), transparent 14%, transparent 86%, var(--ink));
+}
+.dl-phones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 40px); }
+.dl-phones li { display: grid; gap: 8px; align-content: start; }
+.dl-phones li:nth-child(even) { margin-top: 44px; }
+.dl-phones img { width: min(100%, 240px); margin: 0 0 16px; filter: drop-shadow(0 28px 40px rgb(0 0 0 / 62%)); }
+.dl-phones h3 { font: 800 1.6rem/1 var(--display); text-transform: uppercase; }
+.dl-phones p { color: var(--cream-2); font-size: 0.95rem; line-height: 1.6; text-wrap: pretty; }
+.dl-sample { margin-top: 30px; color: var(--grey); }
+
+/* ---- good to know ---- */
+.dl-safe::before {
+  background: linear-gradient(90deg, rgb(5 3 8 / 88%), rgb(5 3 8 / 66%)), linear-gradient(var(--ink), transparent 16%, transparent 84%, var(--ink));
+}
+.dl-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); }
+.dl-cards li { display: grid; gap: 12px; align-content: start; padding: clamp(22px, 2.4vw, 34px); }
+.dl-cards img { width: 88px; height: 88px; margin: -8px 0 2px -8px; filter: drop-shadow(0 14px 18px rgb(0 0 0 / 50%)); }
+.dl-cards h3 { font-size: 1.16rem; }
+.dl-cards p { color: var(--cream-2); font-size: 0.96rem; line-height: 1.6; text-wrap: pretty; }
+
+/* ---- help: the home page's FAQ, here for when something sticks ---- */
+.dl-help details { scroll-margin-top: calc(var(--nav) + 40px); }
+
+/* ---- the end ---- */
+.dl-end { padding-bottom: 36svh; }
+
+/* ---- after the download starts ---- */
+.dl-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 14px 16px 14px 20px;
+  border-radius: 10px;
+  background: rgb(15 10 20 / 92%);
+  backdrop-filter: blur(18px);
+  box-shadow: inset 0 0 0 1px var(--line-2), 0 24px 60px rgb(0 0 0 / 55%);
+  translate: -50% 0;
+  animation: toast-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.dl-toast p { font-size: 0.92rem; line-height: 1.4; }
+.dl-toast a { flex: none; color: var(--pink); font-weight: 650; font-size: 0.92rem; text-decoration: none; }
+.dl-toast a:hover { text-decoration: underline; }
+@keyframes toast-in { from { opacity: 0; translate: -50% 16px; } }
+
+/* ---- narrower desktops ---- */
+@media (min-width: 900px) and (max-width: 1180px) {
+  .dl-phones { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 52px; }
+  .dl-phones li:nth-child(even) { margin-top: 0; }
+  /* The phone on the left, and its words as one block beside it, centred on it. */
+  .dl-phones li { grid-template-columns: minmax(0, 200px) minmax(0, 1fr); grid-template-rows: 1fr auto auto auto 1fr; column-gap: 24px; row-gap: 8px; }
+  .dl-phones img { grid-column: 1; grid-row: 1 / -1; margin: 0; }
+  .dl-phones li > :not(img) { grid-column: 2; }
+  .dl-phones .dl-num { grid-row: 2; }
+  .dl-phones h3 { grid-row: 3; }
+  .dl-phones p { grid-row: 4; }
+  .dl-cards { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .dl-list li { grid-template-columns: 36px minmax(0, 1fr); }
+  .dl-list .dl-out { grid-column: 2; justify-self: start; }
+}
+
+/* ---- phones and small windows: one column, nothing pinned ---- */
+@media (max-width: 899px), (max-height: 500px) {
+  :root { --gutter: clamp(20px, 5.4vw, 48px); --nav: 64px; }
+  .nav {
+    position: absolute;
+    height: auto;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+    background: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+  .nav-logo img { height: 46px; }
+  .nav-links, .nav-end .btn, .nav-end .hud { display: none; }
+  .social { width: 44px; height: 44px; background: rgb(7 5 10 / 44%); }
+
+  .sec { padding-block: calc(var(--nav) + 40px) 72px; }
+  .sec::before { box-shadow: inset 0 0 120px rgb(0 0 0 / 70%); }
+  .plate { top: 0; height: 100%; }
+
+  .dl-hero { min-height: 0; padding-top: calc(env(safe-area-inset-top, 0px) + 104px); }
+  .dl-hero::before { background: linear-gradient(rgb(5 3 8 / 70%), rgb(5 3 8 / 82%) 50%, var(--ink)); }
+  .dl-hero-grid, .dl-two, .dl-step, .dl-step:nth-child(even) { grid-template-columns: minmax(0, 1fr); }
+  .dl-hero-grid { gap: 40px; }
+  .dl-hero h1 { font-size: clamp(3.4rem, 17vw, 5.4rem); }
+  .dl-hero .actions { width: 100%; }
+  .dl-hero .actions .btn { flex: 1 1 100%; }
+  .dl-hero-shot img { transform: none; }
+  .dl-hero-shot:hover img { transform: none; }
+  .dl-phone { display: grid; gap: 12px; justify-items: start; width: 100%; padding: 16px 18px; border-radius: 10px; background: rgb(15 10 20 / 72%); box-shadow: inset 0 0 0 1px var(--line-2); }
+  .dl-phone p { color: var(--cream-2); font-size: 0.95rem; line-height: 1.5; }
+  .dl-phone .btn { min-height: 44px; }
+  .copy { min-height: 44px; padding-inline: 16px; }
+
+  .dl-needs::before, .dl-safe::before, .dl-first::before { background: linear-gradient(rgb(5 3 8 / 80%), rgb(5 3 8 / 86%)), linear-gradient(var(--ink), transparent 12%, transparent 88%, var(--ink)); }
+  .dl-list li { grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding-block: 20px; }
+  .dl-list .dl-out { grid-column: 2; justify-self: start; min-height: 44px; }
+
+  .dl-step:nth-child(even) .dl-shot { order: 0; }
+  .dl-steps { gap: 64px; }
+  .dl-step { gap: 22px; }
+
+  .dl-phones { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 18px; }
+  .dl-phones li:nth-child(even) { margin-top: 0; }
+  .dl-phones img { width: 100%; max-width: 220px; }
+  .dl-phones h3 { font-size: 1.4rem; }
+
+  .dl-cards { grid-template-columns: minmax(0, 1fr); }
+  .dl-help .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .dl-help summary { min-height: 44px; }
+
+  .dl-end { padding-bottom: 44svh; }
+  .dl-end .actions { width: 100%; }
+  .dl-end .actions .btn { flex: 1 1 100%; }
+  .foot-grid { grid-template-columns: minmax(0, 1fr); }
+  .foot-brand > img { height: 96px; }
+}
+
+@media (max-width: 420px) {
+  .dl-phones { grid-template-columns: minmax(0, 1fr); }
+  .dl-phones li { grid-template-columns: 140px minmax(0, 1fr); grid-template-rows: 1fr auto auto auto 1fr; column-gap: 18px; row-gap: 6px; }
+  .dl-phones img { grid-column: 1; grid-row: 1 / -1; margin: 0; }
+  .dl-phones li > :not(img) { grid-column: 2; }
+  .dl-phones .dl-num { grid-row: 2; }
+  .dl-phones h3 { grid-row: 3; }
+  .dl-phones p { grid-row: 4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dl-hero-shot img, .dl-toast { transition: none; animation: none; }
+}

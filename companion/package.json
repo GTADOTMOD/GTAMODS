@@ -1,0 +1,40 @@
+{
+  "name": "pumpv-companion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local companion for the PumpV GTA V phone app: holds the wallet and talks to Solana / pump.fun.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "pumpv": "dist/src/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/src/cli.js start",
+    "wallet:new": "node dist/src/cli.js wallet new",
+    "wallet:import": "node dist/src/cli.js wallet import",
+    "wallet:show": "node dist/src/cli.js wallet show",
+    "sim": "tsc -p tsconfig.json && node dist/tools/phone-sim.js",
+    "test": "tsc -p tsconfig.json && node --test \"dist/test/**/*.test.js\"",
+    "package": "node tools/package-exe.cjs"
+  },
+  "dependencies": {
+    "@pump-fun/pump-sdk": "4.3.1",
+    "@solana/spl-token": "0.4.14",
+    "@solana/web3.js": "1.98.4",
+    "bn.js": "5.2.2",
+    "bs58": "6.0.0",
+    "qrcode-generator": "2.0.4"
+  },
+  "devDependencies": {
+    "@types/bn.js": "5.2.0",
+    "@types/node": "22.19.1",
+    "esbuild": "0.28.2",
+    "postject": "1.0.0-alpha.6",
+    "typescript": "5.9.3"
+  }
+}

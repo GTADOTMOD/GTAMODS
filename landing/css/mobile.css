@@ -1,0 +1,507 @@
+/* The phone version, on top of site.css. The same night and the same words, rebuilt for a thumb: the page scrolls
+   natively, the galleries swipe, navigation lives at the bottom, and nothing heavy runs. Everything that moves is a
+   transform or an opacity, so the graphics chip can run it alone. No blur on the page, no grain, no big shadows. */
+/* The big type's stand-ins for the moment before its own font arrives, sized so every line breaks in the same place and nothing jumps. */
+@font-face { font-family: "Display Fallback Android"; src: local("Roboto Bold"), local("Roboto-Bold"), local("Roboto"); font-weight: 900; size-adjust: 69.5%; }
+@font-face { font-family: "Display Fallback"; src: local("Helvetica Bold"), local("Helvetica-Bold"), local("Arial Bold"), local("Arial-BoldMT"), local("Helvetica"), local("Arial"); font-weight: 900; size-adjust: 63.2%; }
+:root {
+  --gutter: clamp(20px, 5.4vw, 48px);
+  --nav: 0px;
+  --display: "Barlow Condensed", "Display Fallback Android", "Display Fallback", Impact, sans-serif;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* the phone's own type: sharp, and nothing to download */
+  --panel: rgb(20 13 26 / 88%);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dock-h: 62px;
+  --dock-clear: calc(var(--dock-h) + 24px + env(safe-area-inset-bottom, 0px));
+  --ink-soft: rgb(7 5 10 / 56%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.arriving) { scroll-behavior: smooth; }
+}
+body { font-size: 16px; line-height: 1.5; }
+body::after { display: none; }
+a, button, summary { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+h1, h2 { font-size: clamp(2.9rem, 13.4vw, 5.6rem); line-height: 0.9; }
+.eyebrow { gap: 8px; margin-bottom: 14px; font-size: 0.68rem; letter-spacing: 0.1em; }
+.eyebrow::after { flex: 1 1 0; }
+.eyebrow .brand img { height: 18px; }
+.lede { font-size: 1.05rem; line-height: 1.46; }
+.fine { font-size: 0.76rem; }
+.pill { font-weight: 500; }
+.tag { font-size: 0.64rem; }
+
+.btn { min-height: 52px; padding: 0 18px; border-radius: 10px; font-size: 1.14rem; white-space: nowrap; box-shadow: inset 0 1px 0 rgb(255 255 255 / 34%); transition: transform 0.14s ease; }
+.btn:hover { transform: none; box-shadow: inset 0 1px 0 rgb(255 255 255 / 34%); }
+.btn:active { transform: scale(0.97); }
+.btn-ghost { background: rgb(255 255 255 / 5%); box-shadow: inset 0 0 0 1px rgb(255 241 220 / 56%); }
+.btn-ghost:hover { background: rgb(255 255 255 / 5%); box-shadow: inset 0 0 0 1px rgb(255 241 220 / 56%); }
+.btn-soon, .btn-soon:hover { background: rgb(15 10 20 / 74%); box-shadow: inset 0 0 0 1px var(--line-2); }
+.btn-soon:active { transform: none; }
+.actions { gap: 10px; }
+.actions .btn { flex: 1 1 0; }
+
+.card { border-radius: 14px; background: var(--panel); backdrop-filter: none; box-shadow: inset 0 0 0 1px var(--line); }
+
+/* Every section still stands in its own place, in art cropped for a tall screen. Until one is nearly on the screen
+   it isn't laid out or painted and its images don't download, so nobody pays for what they never scroll to. */
+.sec { min-height: 0; padding-block: 76px; }
+.sec, .story { content-visibility: auto; contain-intrinsic-size: auto 820px; }
+.laid-out .sec, .laid-out .story { content-visibility: visible; }
+.plate, [data-parallax] { will-change: auto; }
+.sec::before,
+.company::before, .product::before, .world::before, .how::before, .road::before, .faq::before, .ingame::before {
+  box-shadow: none;
+  background: linear-gradient(var(--ink), rgb(7 5 10 / 62%) 18%, rgb(7 5 10 / 50%) 54%, rgb(7 5 10 / 80%) 86%, var(--ink));
+}
+.company::after { display: none; }
+
+/* ---- top: only the name, and it scrolls away with the opening ---- */
+.nav {
+  position: absolute;
+  height: auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) max(var(--gutter), env(safe-area-inset-right, 0px)) 0 max(var(--gutter), env(safe-area-inset-left, 0px));
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.nav-logo { display: block; margin-block: -10px; padding-block: 10px; }
+.nav-logo img { height: 46px; }
+.nav-links, .nav-end { display: none; }
+.nav { gap: 8px; }
+.nav-status { display: inline-block; margin-left: auto; padding: 4px 9px; background: rgb(7 5 10 / 50%); font-size: 0.62rem; }
+.nav-socials { display: flex; gap: 4px; }
+.social { width: 44px; height: 44px; }
+.nav-socials .social { background: rgb(7 5 10 / 44%); }
+
+/* ---- bottom: a tab bar like the app's own, floating clear of the browser's bar ---- */
+.dock {
+  position: fixed;
+  z-index: 25;
+  left: max(10px, env(safe-area-inset-left, 0px));
+  right: max(10px, env(safe-area-inset-right, 0px));
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  max-width: 520px;
+  height: var(--dock-h);
+  margin-inline: auto;
+  padding: 5px;
+  border-radius: 20px;
+  background: rgb(14 9 18 / 80%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 11%), 0 12px 30px rgb(0 0 0 / 46%);
+  transition: transform 0.55s var(--ease);
+}
+.js .dock { transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom, 0px))); }
+.js .dock.on { transform: none; }
+.dock a {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 3px;
+  min-width: 0;
+  border-radius: 15px;
+  color: var(--cream-2);
+  font: 600 0.65rem/1 var(--body);
+  text-decoration: none;
+  transition: color 0.25s ease, transform 0.14s ease;
+}
+.dock a:active { transform: scale(0.92); }
+.dock a[aria-current] { color: var(--cream); }
+.dock svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.dock-mark { position: absolute; left: 5px; top: 5px; bottom: 5px; width: calc((100% - 10px) / 5); border-radius: 15px; background: rgb(255 255 255 / 10%); transform: translateX(calc(var(--tab, 0) * 100%)); transition: transform 0.5s var(--ease); }
+.dock .dock-cta, .dock .dock-cta[aria-current] { background: var(--pink); color: #16030c; }
+
+/* ---- the opening ---- */
+.intro-pin { flex-direction: column; align-items: stretch; min-height: 100vh; min-height: 100svh; }
+.intro-city { opacity: 1; }
+.intro-street { opacity: 1; }
+.intro-glow { display: none; }
+.intro-shade { background: linear-gradient(rgb(5 3 8 / 70%), rgb(5 3 8 / 56%) 46%, rgb(5 3 8 / 6%) 66%, rgb(7 5 10 / 60%) 88%, var(--ink)); }
+.intro-first { display: none; }
+.hero-copy { flex: none; gap: 14px; padding-top: calc(env(safe-area-inset-top, 0px) + 74px); padding-bottom: 0; }
+.hero-copy > * { min-width: 0; max-width: 100%; }
+.hero-copy .eyebrow { margin: 0; flex-wrap: wrap; row-gap: 6px; }
+.hero-copy .eyebrow::after { display: none; }
+/* The logos arrive a moment after the words, so their room is kept for them. */
+.hero-copy .eyebrow .brand { display: block; min-width: 122px; min-height: 18px; }
+.hero-fine .brand-named:not(:has(img)) { padding-left: 2.04em; }
+.hero-copy h1 { max-width: none; font-size: clamp(3.1rem, min(16.6vw, 9.4svh), 6.4rem); line-height: 0.87; }
+.hero-copy .lede { font-size: 1rem; }
+.hero-copy .actions { width: 100%; max-width: 480px; }
+.hero-fine { width: 100%; padding-top: 10px; font-size: 0.72rem; }
+
+/* It starts as the name on black, with the aerial city showing through the letters. The finished page is already there
+   under both, so a touch lands straight on it, and it's never waiting on the opening. If the script never comes, they clear themselves. */
+.opening #introMask { display: block; position: fixed; inset: 0; z-index: 40; width: 100%; height: 100%; background: var(--ink); animation: cover-gone 0s linear 4.5s forwards; }
+.opening.drawing #introMask { background: none; }
+@keyframes cover-gone { to { visibility: hidden; } }
+.opening .intro-city, .landing-copy .intro-city { position: fixed; inset: 0; z-index: 39; }
+.opening .intro-city { animation: city-settle 1.8s var(--ease) both, cover-gone 0s linear 4.5s forwards; }
+@keyframes city-settle { from { transform: scale(1.16); } }
+/* Through the letters, the city dissolves, and the words rise out of it. */
+.landing-copy .intro-city { animation: city-out 0.75s ease forwards; }
+@keyframes city-out { to { opacity: 0; } }
+.landing-copy .hero-copy > * { animation: rise 1s var(--ease) backwards; }
+.landing-copy .hero-copy > :nth-child(2) { animation-delay: 0.05s; }
+.landing-copy .hero-copy > :nth-child(3) { animation-delay: 0.1s; }
+.landing-copy .hero-copy > :nth-child(4) { animation-delay: 0.15s; }
+.landing-copy .hero-copy > :nth-child(5) { animation-delay: 0.2s; }
+@keyframes rise { from { transform: translate3d(0, 30px, 0); } }
+
+/* ---- a phone, and coins ---- */
+.m-phone { position: relative; flex: none; width: var(--pw); overflow: hidden; border-radius: 13% / 7%; }
+.m-phone img, .m-phone .step-shot { display: block; width: 100%; height: auto; max-width: none; margin: 0; }
+.m-sheen { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(108deg, transparent 34%, rgb(255 255 255 / 15%) 48%, rgb(255 255 255 / 3%) 56%, transparent 66%); }
+
+.coin {
+  --s: 1;
+  --dy: 0;
+  --dx: 0;
+  --hx: calc(var(--side) * (var(--pw) / 2 + 8px + var(--coin) * var(--s) / 2 + (var(--arc) + var(--dx)) * var(--spare)));
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: calc(var(--coin) * var(--s));
+  height: calc(var(--coin) * var(--s));
+  margin: calc(var(--coin) * var(--s) / -2) 0 0 calc(var(--coin) * var(--s) / -2);
+  perspective: calc(var(--coin) * 6);
+  pointer-events: none;
+  transform: translate(var(--hx), var(--hy));
+}
+.coin-float, .coin-spin, .coin-body { position: absolute; inset: 0; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; }
+.coin-float { animation: coin-float calc(6.4s * var(--k, 1)) ease-in-out infinite alternate; animation-delay: calc(var(--row) * -2.1s + var(--t, 0s)); }
+@keyframes coin-float { from { transform: translate3d(0, -5px, 0); } to { transform: translate3d(0, 5px, 0); } }
+/* The faces lean in towards the phone, and each coin is the mirror of its pair. */
+.coin-body { animation: coin-rock calc(5.4s * var(--k, 1)) ease-in-out infinite alternate; animation-delay: calc(var(--row) * -1.7s + var(--t, 0s)); }
+@keyframes coin-rock { from { transform: rotateY(calc(var(--side) * (var(--lean, 0deg) - 5deg))) rotateX(var(--tip, 0deg)); } to { transform: rotateY(calc(var(--side) * (var(--lean, 0deg) - 30deg))) rotateX(calc(var(--tip, 0deg) * -1)); } }
+.coin-edge { position: absolute; inset: 1.5%; border-radius: 50%; background: linear-gradient(115deg, #ffe7ad, #b47c2a 44%, #fbd483 68%, #8a591b); }
+.coin-front, .coin-back { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.coin-front { transform: translateZ(calc(var(--coin) * 0.045)); }
+.coin-back { transform: rotateY(180deg) translateZ(calc(var(--coin) * 0.045)); }
+.coin-glint { position: absolute; inset: 4%; border-radius: 50%; background: linear-gradient(120deg, transparent 32%, rgb(255 255 255 / 42%) 50%, transparent 66%); transform: translateZ(calc(var(--coin) * 0.05)); -webkit-backface-visibility: hidden; backface-visibility: hidden; opacity: 0; animation: coin-glint 5.4s ease-in-out infinite alternate; animation-delay: calc(var(--row) * -1.7s); }
+@keyframes coin-glint { 0%, 55% { opacity: 0; } 100% { opacity: 0.7; } }
+.idle .coin-float, .idle .coin-body, .idle .coin-glint { animation-play-state: paused; }
+.lite .coin-float, .lite .coin-body, .lite .coin-glint { animation: none; }
+.lite .coin-body { transform: rotateY(calc(var(--side) * -20deg)); }
+
+/* The phone in the opening stands under the words with its foot past the fold, and it rises as you scroll. */
+.m-rig {
+  --pw: min(54vw, 40svh, 330px);
+  --coin: clamp(44px, calc((100vw - var(--pw)) / 2 - 24px), 92px);
+  --spare: 0px;
+  position: relative;
+  flex: 1 0 clamp(216px, 34svh, 400px);
+  margin-top: 16px;
+}
+.m-rig::before { content: ""; position: absolute; left: 50%; top: -6%; width: 170%; aspect-ratio: 1; transform: translateX(-50%); background: radial-gradient(closest-side, rgb(255 40 120 / 26%), rgb(255 90 70 / 8%) 58%, transparent); pointer-events: none; }
+.m-rig .m-phone { position: absolute; left: 50%; top: 0; margin-left: calc(var(--pw) / -2); }
+.m-rig .coin { --hy: calc(var(--coin) * 0.72 + var(--row) * var(--coin) * 1.8 + var(--dy) * var(--coin)); }
+.m-rig::after { content: ""; position: absolute; left: -10%; right: -10%; bottom: 0; height: 26%; background: linear-gradient(transparent, var(--ink)); pointer-events: none; }
+
+.landing .m-rig .m-phone { animation: phone-up 1.15s var(--ease) backwards 0.08s; }
+@keyframes phone-up { from { opacity: 0; transform: translate3d(0, 44%, 0) scale(0.94); } }
+.landing .m-rig .m-sheen { animation: sheen-pass 1.7s var(--ease) backwards 0.5s; }
+@keyframes sheen-pass { from { transform: translate3d(-80%, 0, 0); } }
+.landing .m-rig .coin { animation: coin-burst 1s cubic-bezier(0.2, 0.9, 0.25, 1.06) backwards; animation-delay: calc(0.5s + var(--row) * 0.09s); }
+@keyframes coin-burst { from { opacity: 0; transform: translate(0, calc(var(--coin) * 1.7)) scale(0.28); } 30% { opacity: 1; } }
+.landing .m-rig .coin-spin { animation: coin-unwind 1.15s var(--ease) backwards; animation-delay: calc(0.5s + var(--row) * 0.09s); }
+@keyframes coin-unwind { from { transform: rotateY(calc(var(--side) * 540deg)); } }
+
+/* ---- who we are ---- */
+.company-grid { display: block; }
+.company-copy { gap: 14px; }
+.company-copy h2 { font-size: clamp(3.3rem, 18vw, 6.4rem); }
+.tenets li { grid-template-columns: 40px minmax(0, 1fr); padding-block: 12px; }
+.tenets li::before { font-size: 0.7rem; }
+.tenets b { font-size: 1.3rem; }
+.tenets span { font-size: 0.92rem; }
+.games { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; height: auto; margin-top: 22px; perspective: none; }
+.game { position: relative; inset: auto; gap: 8px; width: auto; padding: 14px; rotate: none; transform: none; animation: none; }
+.float-coin { display: none; }
+.game:hover { box-shadow: inset 0 0 0 1px var(--line); }
+.game-mark { min-height: 92px; }
+.brand-big img { height: 86px; }
+.game p { font-size: 0.86rem; line-height: 1.38; }
+
+/* ---- first product ---- */
+.product { padding-bottom: 44px; }
+.product-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.product-id { grid-template-columns: auto minmax(0, 1fr); justify-items: start; align-items: center; gap: 0 18px; padding: 0; text-align: left; perspective: none; }
+.product-id::before { left: 0; top: 50%; width: 220px; translate: -30% -50%; }
+.app-tile { grid-row: span 3; width: 104px; margin: 0; transform: none; }
+.product-name { font-size: 2.4rem; }
+.product-tag { margin-block: 2px 8px; font-size: 0.64rem; }
+.facts { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 0; border-top: 0; }
+.facts li { grid-template-columns: 48px minmax(0, 1fr); gap: 14px; padding-block: 13px; border-top: 1px solid var(--line); }
+.facts .icon { width: 48px; height: 48px; }
+.facts b { font-size: 1.32rem; }
+.facts span { margin-top: 2px; font-size: 0.94rem; }
+
+/* ---- the story: a deck you swipe, and the coins follow your finger ---- */
+.story-pin {
+  --top: max(14px, env(safe-area-inset-top, 0px));
+  --foot: 40px;
+  --ph: clamp(270px, min(calc(100svh - 352px), 114vw), 600px);
+  --pw: calc(var(--ph) * 0.5347);
+  --coin: clamp(42px, min(calc((100vw - var(--pw)) / 2 - 22px), calc(var(--ph) * 0.205)), 92px);
+  --spare: clamp(0px, calc((100vw - var(--pw)) / 2 - var(--coin) - 24px), 44px);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-block: var(--top) var(--dock-clear);
+}
+.story-plates { display: block; overflow: hidden; }
+.story-plates picture { display: none; }
+.story-plates picture.near { display: contents; }
+.story-plates img { position: absolute; inset: 0; opacity: 0; }
+.story-shade { background: linear-gradient(rgb(7 5 10 / 76%), rgb(7 5 10 / 28%) 20%, rgb(7 5 10 / 34%) 50%, rgb(7 5 10 / 92%) 70%, var(--ink)); }
+
+.story-foot { order: -1; flex: none; height: var(--foot); gap: 12px; padding: 0 max(var(--gutter), env(safe-area-inset-right, 0px)) 0 max(var(--gutter), env(safe-area-inset-left, 0px)); }
+.story-dots { flex: 1 1 0; display: flex; gap: 4px; }
+.story-dots li { position: relative; flex: 1 1 0; width: auto; height: 3px; overflow: hidden; border-radius: 2px; background: rgb(255 255 255 / 20%); }
+.story-dots li::after { content: ""; position: absolute; inset: 0; background: var(--amber); transform: scaleX(var(--f, 0)); transform-origin: left; }
+.story-foot .tag { flex: none; color: var(--cream-2); font-size: 0.56rem; letter-spacing: 0.08em; white-space: nowrap; }
+
+.steps {
+  flex: 1 0 auto;
+  display: flex;
+  gap: 0;
+  padding: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  outline-offset: -4px;
+}
+.steps::-webkit-scrollbar { display: none; }
+.step {
+  flex: 0 0 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  perspective: 1100px;
+}
+.step .m-phone { will-change: transform; transform: rotateY(calc(var(--d, 0) * -38deg)) translate3d(calc(var(--d, 0) * -10%), 0, 0) scale(calc(1 - var(--a, 0) * 0.14)); }
+.step .m-sheen { transform: translate3d(calc(var(--d, 0) * 80%), 0, 0); }
+.step-shot { width: auto; height: var(--ph); max-width: none; margin: 0; }
+.step-copy { width: 100%; max-width: 620px; padding: 16px max(var(--gutter), env(safe-area-inset-right, 0px)) 0 max(var(--gutter), env(safe-area-inset-left, 0px)); opacity: calc(1 - var(--a, 0) * 1.7); transform: translate3d(calc(var(--d, 0) * 70px), 0, 0); }
+.step-kicker { margin-bottom: 6px; font-size: 0.68rem; }
+.step h3 { max-width: none; font-size: clamp(2rem, 9.2vw, 3.3rem); line-height: 0.94; }
+.step-copy p:last-child { max-width: none; margin-top: 8px; font-size: 0.96rem; line-height: 1.42; }
+
+.m-coins { position: absolute; z-index: 2; left: 0; right: 0; top: calc(var(--top) + var(--foot) + var(--ph) / 2); height: 0; pointer-events: none; }
+.m-coins .coin {
+  --hy: calc((var(--row) - 1) * var(--ph) * 0.34 + var(--dy) * var(--coin));
+  opacity: calc(var(--out, 1) * 3);
+  transform: translate(calc(var(--hx) * var(--out, 1)), calc(var(--hy) * var(--out, 1))) scale(calc(0.3 + var(--out, 1) * 0.7));
+}
+.m-coins .coin-spin { transform: rotateY(calc(var(--side) * (1 - var(--out, 1)) * 360deg)); }
+
+/* ---- the world: a film strip you swipe ---- */
+.world h2 { max-width: none; margin-bottom: 22px; font-size: clamp(2.5rem, 11.6vw, 4.8rem); }
+.strip {
+  display: flex;
+  gap: 10px;
+  width: auto;
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)) var(--gutter);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+  will-change: auto;
+}
+.strip::-webkit-scrollbar { display: none; }
+.strip::after { content: ""; flex: 0 0 1px; }
+.frame, .f-wide, .f-mid { flex: 0 0 min(76vw, 400px); width: auto; scroll-snap-align: start; }
+.frame img { width: 100%; height: auto; aspect-ratio: 4 / 5; border-radius: 12px; object-fit: cover; }
+.frame figcaption { margin-top: 8px; font-size: 0.62rem; }
+.world-note { margin-top: 18px; }
+
+/* ---- in the game: look around the capture ---- */
+.ingame { padding-bottom: 56px; }
+.ingame-copy { display: block; padding-bottom: 18px; }
+.ingame-copy .lede { margin-top: 12px; }
+.capture.wrap { padding-inline: 0; }
+.capture-frame { position: relative; border-radius: 0; box-shadow: inset 0 1px 0 var(--line), inset 0 -1px 0 var(--line); }
+.capture-bar { justify-content: space-between; gap: 4px 12px; padding: 9px var(--gutter); font-size: 0.56rem; letter-spacing: 0.08em; }
+.capture-pan { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+.capture-pan::-webkit-scrollbar { display: none; }
+.capture-pan img { width: auto; max-width: none; height: min(58svh, 500px); aspect-ratio: 2101 / 880; }
+.capture-frame::after { content: "Drag to look around"; position: absolute; left: 50%; bottom: 12px; padding: 6px 11px; border-radius: 99px; background: rgb(7 5 10 / 76%); color: var(--cream); font: 500 0.62rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; transform: translateX(-50%); white-space: nowrap; pointer-events: none; }
+.capture figcaption { padding-inline: var(--gutter); }
+
+/* ---- photo to coin: a flash, and the print lands beside the phone ---- */
+.photo-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0; }
+.photo-copy { grid-column: 1 / -1; gap: 14px; margin-bottom: 30px; }
+.photo-copy h2 { font-size: clamp(3.1rem, 17vw, 6rem); }
+.print { position: relative; z-index: 1; grid-column: 1 / 8; grid-row: 2; padding: 8px 8px 10px; transform: rotate(-4deg); box-shadow: 0 16px 34px rgb(0 0 0 / 55%); }
+.print figcaption { padding-top: 7px; font-size: 0.54rem; }
+.print::after { content: ""; position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.print.in::after { animation: flash 0.9s ease-out 0.2s; }
+@keyframes flash { 0% { opacity: 0; } 10% { opacity: 1; } 100% { opacity: 0; } }
+.photo-phone { position: relative; z-index: 2; grid-column: 7 / 13; grid-row: 2; }
+.photo-phone img { filter: none; }
+
+/* ---- under the hood ---- */
+.how h2 { max-width: none; }
+.flow { position: relative; grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 22px; padding-left: 24px; }
+.flow::before { content: ""; position: absolute; left: 5px; top: 18px; bottom: 18px; width: 2px; background: linear-gradient(var(--amber), var(--pink)); transform-origin: top; }
+.flow li { gap: 5px; padding: 14px 16px; }
+.flow li + li::before { display: none; }
+.flow li::after { content: ""; position: absolute; left: -24px; top: 21px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 2px var(--amber); }
+.flow .icon { width: 56px; height: 56px; margin: 0 0 4px -4px; }
+.flow h3 { font-size: 1.7rem; }
+.flow li p:last-child { font-size: 0.94rem; line-height: 1.42; }
+.trust {
+  counter-reset: fact;
+  display: flex;
+  gap: 10px;
+  margin: 24px calc(var(--edge) * -1) 0;
+  padding: 0 var(--edge);
+  border-top: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--edge);
+  scrollbar-width: none;
+}
+.trust::-webkit-scrollbar { display: none; }
+.trust::after { content: ""; flex: 0 0 1px; }
+.trust li { counter-increment: fact; flex: 0 0 min(76vw, 380px); padding: 16px; border-radius: 14px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); scroll-snap-align: start; }
+.trust li::before { content: counter(fact, decimal-leading-zero) " / 06"; display: block; margin-bottom: 10px; color: var(--amber); font: 500 0.64rem/1 var(--mono); letter-spacing: 0.12em; }
+.trust li { display: block; }
+.trust .icon { width: 52px; height: 52px; margin: 0 0 10px -2px; }
+.trust h3 { margin-bottom: 6px; font: 800 1.4rem/1.05 var(--display); text-transform: uppercase; }
+.trust p { font-size: 0.92rem; line-height: 1.42; }
+
+/* ---- the road ---- */
+.road-list { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 22px; padding: 0 0 0 24px; }
+.road-list::before { left: 5px; right: auto; top: 18px; bottom: 18px; width: 2px; height: auto; transform-origin: top; }
+.road-list li { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 14px 16px; }
+.road-list .icon, .road-mark { width: 52px; height: 52px; }
+.road-list li::before { left: -24px; top: 21px; width: 12px; height: 12px; box-shadow: 0 0 0 2px var(--amber); transform: none; }
+.road-when { font-size: 1.9rem; }
+.road-list h3 { font-size: 1.05rem; }
+.road-list p { font-size: 0.94rem; line-height: 1.42; }
+.brand-road img { height: 50px; }
+
+/* ---- questions ---- */
+.faq-grid { display: block; }
+.faq-title h2 { font-size: clamp(2.9rem, 13.4vw, 5.6rem); }
+.faq-list { margin-top: 20px; padding: 2px 16px; }
+.faq summary { min-height: 58px; gap: 14px; padding-block: 14px; font-size: 0.98rem; line-height: 1.32; }
+.faq details p { padding-bottom: 16px; font-size: 0.94rem; line-height: 1.5; }
+@supports (interpolate-size: allow-keywords) {
+  .faq details { interpolate-size: allow-keywords; }
+  .faq details::details-content { height: 0; overflow: clip; transition: height 0.32s var(--ease), content-visibility 0.32s allow-discrete; }
+  .faq details[open]::details-content { height: auto; }
+}
+
+/* ---- get in ---- */
+.access { display: block; padding-block: 76px 56svh; }
+.access .plate { object-position: 50% 100%; }
+.access::before { background: linear-gradient(var(--ink), rgb(7 5 10 / 22%) 34%, transparent 70%, rgb(7 5 10 / 70%)); }
+.access-copy { gap: 14px; }
+.access-copy .eyebrow { margin: 0; }
+.access-copy h2 { font-size: clamp(4rem, 23vw, 8.4rem); line-height: 0.84; }
+.access-copy .actions { flex-direction: column; width: 100%; max-width: 440px; margin-top: 6px; }
+.access-copy .actions .btn { flex: none; width: 100%; }
+
+/* ---- foot ---- */
+.foot { padding-block: 32px var(--dock-clear); }
+.foot-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.foot-brand > img { width: auto; height: 96px; }
+.foot-legal { font-size: 0.76rem; line-height: 1.5; }
+
+/* ---- appearing: quick, and only headlines and cards, so nobody waits to read ---- */
+.mob h2.reveal, .mob .card.reveal, .mob .photo-phone.reveal, .mob .facts.reveal, .mob .flow.reveal { opacity: 0; transform: translate3d(0, 18px, 0); transition: opacity 0.5s ease, transform 0.8s var(--ease); }
+.mob h2.reveal.in, .mob .card.reveal.in, .mob .photo-phone.reveal.in, .mob .facts.reveal.in, .mob .flow.reveal.in { opacity: 1; transform: none; }
+.mob .games .reveal:nth-child(2), .mob .road-list .reveal:nth-child(2) { transition-delay: 0.07s; }
+.mob .road-list .reveal:nth-child(3) { transition-delay: 0.14s; }
+.mob .print.reveal { opacity: 0; transform: translate3d(0, 22px, 0) rotate(2deg) scale(0.96); transition: opacity 0.4s ease, transform 0.9s var(--ease); }
+.mob .print.reveal.in { opacity: 1; transform: rotate(-4deg); }
+.mob .photo-phone.reveal { transform: translate3d(36px, 10px, 0); transition-delay: 0.22s; }
+.mob .photo-phone.reveal.in { transform: none; }
+
+/* Where the browser can run scroll-linked motion by itself, without the page's script. Elsewhere these things just hold still. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .plate { animation: plate-drift linear both; animation-timeline: view(); }
+    @keyframes plate-drift { from { transform: translate3d(0, -5%, 0); } to { transform: translate3d(0, 5%, 0); } }
+    .m-rig { animation: rig-lift linear both; animation-timeline: scroll(root); animation-range: 0 90svh; }
+    @keyframes rig-lift { to { transform: translate3d(0, -18%, 0); } }
+    .hero-copy { animation: copy-away linear both; animation-timeline: scroll(root); animation-range: 0 70svh; }
+    @keyframes copy-away { to { opacity: 0.1; transform: translate3d(0, -36px, 0); } }
+    .frame, .trust li { animation: card-in linear both; animation-timeline: view(inline); animation-range: entry 0% cover 34%; }
+    @keyframes card-in { from { opacity: 0.45; transform: scale(0.92); } }
+    .flow::before, .road-list::before { animation: line-draw linear both; animation-timeline: view(); animation-range: entry 30% cover 62%; }
+    @keyframes line-draw { from { transform: scaleY(0); } }
+  }
+}
+
+/* ---- small and short screens ---- */
+@media (max-width: 359px) {
+  .nav-status { display: none; }
+  .nav-socials { margin-left: auto; }
+  .actions { flex-direction: column; }
+  .actions .btn { flex: none; width: 100%; }
+  .games { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- tablets, upright ---- */
+@media (min-width: 600px) {
+  .step-copy { text-align: center; }
+  .step-copy p:last-child { margin-inline: auto; max-width: 34em; }
+  .lede { max-width: 32em; }
+}
+
+/* ---- a phone on its side: the words and the phone stand beside each other, and the bar gives up its space ---- */
+@media (max-height: 500px) {
+  :root { --dock-clear: 22px; }
+  .dock, .nav-status, .nav-socials { display: none; }
+  h1, h2, .world h2 { font-size: clamp(2.4rem, 13vh, 3.6rem); }
+  .sec { padding-block: 44px; }
+  .intro-pin { flex-direction: row; align-items: stretch; height: auto; min-height: 100svh; }
+  .intro-shade { background: linear-gradient(90deg, rgb(5 3 8 / 82%), rgb(5 3 8 / 48%) 60%, rgb(5 3 8 / 10%)); }
+  .nav-logo img { height: 34px; }
+  .hero-copy { flex: 1 1 62%; align-self: center; gap: 8px; padding-top: 56px; padding-bottom: 14px; padding-right: 0; }
+  .hero-copy h1 { font-size: clamp(2.3rem, 15vh, 3.8rem); }
+  .hero-copy .lede { font-size: 0.86rem; line-height: 1.34; }
+  .hero-fine { padding-top: 6px; font-size: 0.64rem; }
+  .btn { min-height: 44px; font-size: 1rem; }
+  .m-rig { --pw: min(34vh, 180px); --coin: 40px; flex: 1 1 38%; margin-top: 18px; }
+  .m-rig .coin { --hy: calc(var(--coin) * 0.72 + var(--row) * var(--coin) * 1.5 + var(--dy) * var(--coin)); }
+  .company-copy h2, .photo-copy h2, .access-copy h2 { font-size: clamp(2.8rem, 16vh, 4.4rem); }
+  .story-pin { --ph: calc(100svh - 64px); --pw: calc(var(--ph) * 0.5347); padding-block: 8px; }
+  .step { flex-direction: row; justify-content: center; gap: clamp(16px, 5vw, 44px); }
+  .step-copy { max-width: 44vw; padding: 0; text-align: left; }
+  .step h3 { font-size: clamp(1.7rem, 10vh, 2.5rem); }
+  .step-copy p:last-child { margin-inline: 0; font-size: 0.86rem; }
+  .m-coins { display: none; }
+  .frame, .f-wide, .f-mid { flex-basis: 52vh; }
+  .capture-pan img { height: 70svh; }
+  .print { grid-column: 3 / 7; }
+  .photo-phone { grid-column: 7 / 11; }
+  .access { padding-block: 44px 30svh; }
+  .access-copy .actions { flex-direction: row; max-width: none; }
+  .access-copy .actions .btn { flex: 1 1 0; width: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step .m-phone, .step .m-sheen, .step-copy { transform: none; }
+  .step-copy { opacity: 1; }
+  .js .dock { transition: none; }
+}

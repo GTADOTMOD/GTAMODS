@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/GTADOTMOD/GTAMODS/security/advisories/new
+    about: Please report security problems privately, not as an issue.
+  - name: Website and download
+    url: https://gtamod.onrender.com
+    about: Download RUGR Setup and read the install guide.
+  - name: GTAMOD on X
+    url: https://x.com/GTADOTMOD
+    about: News and updates.
